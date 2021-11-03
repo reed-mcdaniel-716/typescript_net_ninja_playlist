@@ -1,0 +1,14 @@
+{
+  "name": "net_ninja_typescript",
+  "version": "1.0.0",
+  "description": "Net Ninja Typescript Playlist",
+  "main": "src/sandbox.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Reed McDaniel",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.4.4"
+  }
+}
