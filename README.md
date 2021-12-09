@@ -16,6 +16,8 @@
 10. [Function Types (Signatures)](#func_types_sigs)
 11. [The DOM & Type Casting](#dom_type_casting)
 12. [Classes](#classes)
+13. [Public, Private, Readonly](#public_private_readonly)
+14. [Modules](#modules)
 
 ---
 
@@ -30,6 +32,8 @@
   ```
 - Additional features like generics, interfaces, tuples, and more
 
+---
+
 2. Compiling TypeScript <a name='compile'></a>
 
 - Using Microsoft's Live Preview to have a server serving this content in the browser at port 3000
@@ -37,18 +41,20 @@
 - This can be done with the following command:
 
 ```shell
-npx tsc sandbox.ts sandbox.js
+npx tsc app.ts app.js
 ```
 
-where `sandbox.ts` could be replaced with any input TS filename, and `sanbox.js` could be replaced with any output JS filename
+where `app.ts` could be replaced with any input TS filename, and `app.js` could be replaced with any output JS filename
 
 - **_can't have both files open at the same due to naming conflicts_**
 - if you want the input and output files to have the same name you can leave off the output file name
 - if you want typescript to watch a file and automatically recompile TS code to JS code on saved changes:
 
 ```shell
-npx tsc sandbox.ts -w
+npx tsc app.ts -w
 ```
+
+---
 
 3. Type Basics <a name='type_basics'></a>
 
@@ -59,6 +65,8 @@ npx tsc sandbox.ts -w
 - You should however define the type for function parameters to ensure type checking
 - Type checking is done at compilation > i.e. code won't compile to JS if type errors exist
 
+---
+
 4. Objects and Arrays <a name='objs_arrays'></a>
 
 - All elements of an array **must** be of the same type **if** the original array is declared with just a single type
@@ -67,6 +75,8 @@ npx tsc sandbox.ts -w
 - In an object, the key-value pair assignents work like variable assignments in that the type of a particular key cannot be changes
 - Once an object is declared, you cannot add or remove a property
 - Additionally, arrays must remain arrays, and likewise for objects
+
+---
 
 5. Explict Types <a name='explicit_types'></a>
 
@@ -106,6 +116,8 @@ let obj2: {
 // more structure to be enforced when the variable is given a value
 ```
 
+---
+
 6. Dynamic (Any) Types <a name='dynamic_any_types'></a>
 
 - `any` type for variables that can be of any type, and can therefore also change type over time
@@ -128,6 +140,8 @@ let obj: {
 
 - kind of reverts TS back to JS, removing a lot of its useful features
 
+---
+
 7. Better Workflow & `tsconfig` <a name='workflow'></a>
 
 - May want to structure you project separating your `public` files (i.e. CSS, HTML, compiled JS code), from your `src` source TS files
@@ -149,6 +163,8 @@ npx tsc --init
     "include": ["src"]
   }
   ```
+
+---
 
 8. Function Basics <a name='functions'></a>
 
@@ -196,6 +212,8 @@ let result = add(1, 3);
 // the type of result is now inferred to be the return type of add() which is a number
 ```
 
+---
+
 9. Type Aliases <a name='type_aliases'></a>
 
 - Type aliases can be defined to reuse type specifications for DRYer code
@@ -208,6 +226,8 @@ const logDetails = (uuid: StringOrNum) => {};
 
 const logMore = (uuid: StringOrNum, hash: number) => {};
 ```
+
+---
 
 10. Function Types (Signatures) <a name='func_types_sigs'></a>
 
@@ -224,6 +244,8 @@ logDetails = (ninja: person): void => {
 };
 ```
 
+---
+
 11. The DOM & Type Casting <a name='dom_type_casting'></a>
 
 - TypeScript doesn't have special access to your HTML, so it doesn't know if certain element will exist (or be null) after compilation
@@ -235,4 +257,36 @@ logDetails = (ninja: person): void => {
 - TS however cannot infer the type of an element if it is grabbed by something other then it's tag type i.e. if you grab it by its class
   - in this case, you must type cast that element if you wnat access to its specific type properites and methods
 
-12. Classes
+---
+
+12. Classes <a name='classes'></a>
+
+- Classes in TS behave much like how they do in JS, with the addition of the strict type system
+- To make an array of a user-defined class, you can do the following:
+
+```typescript
+class MyClass{
+  ...
+}
+
+let myClassArr: myClass[] = [];
+```
+
+---
+
+13. Public, Private, Readonly <a name='public_private_readonly'></a>
+
+- TypeScript provides access modifiers (like in Java) for class properties and methods
+  - `public`: any access and modification inside and outside of the class
+  - `private`: only access and modification within a class
+  - `readonly`: can access from inside and outside the class, but not modify it in either context
+- accessors can be applied whenever a variable is first declared, either at the beginning of a class or within a class constructor
+
+---
+
+14. Modules <a name='modules'></a>
+
+- We may wish to split our code out into separate files via [ES6 modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) i.e. what you `import` and `export`
+  - because `modules` are only supported for newer browsers, TS doesn't compile them down to something older browsers will understand, so it's important to be using a modern browser to enable this functionality
+  - Another option is `webpack` + TS (out of scope) for bundling and support for older browsers
+- To use modules, in any `<script></script>` tags that have a compiled JS module (i.e. one that was written in TS then compiled to JS code in youas a `src`, set the property `type="module"`
