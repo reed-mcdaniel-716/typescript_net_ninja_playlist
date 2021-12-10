@@ -18,6 +18,8 @@
 12. [Classes](#classes)
 13. [Public, Private, Readonly](#public_private_readonly)
 14. [Modules](#modules)
+15. [Interfaces](#interfaces)
+16. [Interfaces and Classes](#interfaces_and_classes)
 
 ---
 
@@ -29,6 +31,7 @@
   ```shell
   npm init
   npm install --save-dev typescript
+  npm install --save-dev commonjs
   ```
 - Additional features like generics, interfaces, tuples, and more
 
@@ -152,8 +155,9 @@ npx tsc --init
 ```
 
 - This creates a `tsconfig.json` file:
-  - could change `target` to `ESNext` from `es5`, indicating the higest JS version your TS version supports
-  - set `outDir` to where you want compiled JS files, and `rootDir` to where your source TS files will be housed
+  - could change `"target"` to `ESNext` from `es5`, indicating the higest JS version your TS version supports
+  - could also change `"module"` to `ESNext`
+  - set `"outDir"` to where you want compiled JS files, and `"rootDir"` to where your source TS files will be housed
 - Must also tell TS what to watch now with `npx tsc -w`
   - unfortunately, this now has TS watching all file with the extension `.ts`, and compiling them in the `public` folder, even those outside of the source `src` folder
   - to address this, you can specify which files should be included in watching in the `tsconfig.json` file by adding the following at the top level of the object:
@@ -290,3 +294,42 @@ let myClassArr: myClass[] = [];
   - because `modules` are only supported for newer browsers, TS doesn't compile them down to something older browsers will understand, so it's important to be using a modern browser to enable this functionality
   - Another option is `webpack` + TS (out of scope) for bundling and support for older browsers
 - To use modules, in any `<script></script>` tags that have a compiled JS module (i.e. one that was written in TS then compiled to JS code in youas a `src`, set the property `type="module"`
+
+---
+
+15. Interfaces <a name='interfaces'></a>
+
+- for the difference between type aliases and intefaces (they look quite similar...) [read this](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#differences-between-type-aliases-and-interfaces)
+- recall, interfaces are like contracts, telling you what you can expect from a class that implements or other interface that extends it
+- an instantiation of an interface must have all properties and only the properties defined in the interface
+- this can be very helpful in enforcing what argements are passed as parameters to a function
+
+```typescript
+// interfaces
+
+interface IsPerson {
+  name: string;
+  age: number;
+  speak(a: string): void;
+  spend(a: number): number;
+}
+
+const me: IsPerson = {
+  name: "reed",
+  age: 25,
+  speak(text: string): void {
+    console.log(text);
+  },
+  spend(amount: number): number {
+    console.log(` spent ${amount}`);
+    return amount;
+  },
+};
+```
+
+---
+
+16. Interfaces and Classes<a name='interfaces_and_classes'></a>
+
+- classes can implement interfaces
+- intefaces can be used much like types in that they can be used to enforce the structure and content of variable, lists, and classes
