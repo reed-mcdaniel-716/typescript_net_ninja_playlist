@@ -1,5 +1,6 @@
-import { Invoice } from './classes/Invoice.js'
-import { Payment } from './classes/Payment.js'
+import { Invoice } from './classes/Invoice.js';
+import { Payment } from './classes/Payment.js';
+import { ListTemplate } from './classes/ListTemplate.js';
 import { HasFormatter } from './interfaces/HasFormatter.js';
 
 /*let docOne: HasFormatter;
@@ -30,18 +31,40 @@ const tofrom = document.querySelector('#tofrom') as HTMLInputElement;
 const details = document.querySelector('#details') as HTMLInputElement;
 const amount = document.querySelector('#amount') as HTMLInputElement;
 
+// list template instance
+// ul already in main html
+const ul = document.getElementsByClassName('item-list')[0]! as HTMLUListElement; // exclaimation point means we guarantee this is not null
+const list = new ListTemplate(ul);
+
 form.addEventListener('submit', (e: Event) => {
   e.preventDefault();
 
+  let values: [string, string, number];
+  values = [tofrom.value, details.value, amount.valueAsNumber];
   let doc : HasFormatter;
 
   if (type.value === 'invoice'){
-    doc = new Invoice(tofrom.value, details.value, amount.valueAsNumber)
+    // works because we've enforced the types of each position in the tuple s.t. it matches the expected arg types
+    doc = new Invoice(...values)
   } else {
-    doc = new Payment(tofrom.value, details.value, amount.valueAsNumber)
+    doc = new Payment(...values)
   }
 
-  console.log(doc.format());
+  list.render(doc, type.value, 'end');
 });
 
+// Generics
+const addUID = <T>(obj: T) =>
+{
+  let uid = Math.floor(Math.random() * 100);
+  return {...obj, uid};
+}
+
+let docOne = addUID({name: 'yoshi', age: 40});
+console.log(docOne);
+console.log(docOne.name);
+
+// but can't access any properties of the object because the function doesn't know what kind of object this is
+// and therefore, we can't know the properties of the returned object
+// must use generics
 

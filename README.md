@@ -20,6 +20,10 @@
 14. [Modules](#modules)
 15. [Interfaces](#interfaces)
 16. [Interfaces and Classes](#interfaces_and_classes)
+17. [Rendering an HTML Template](#html_templates)
+18. [Generics](#generics)
+19. [Enums](#enums)
+20. [Tuples](#tuples)
 
 ---
 
@@ -259,7 +263,7 @@ logDetails = (ninja: person): void => {
   - knows all properties and methods available on that element type
   - for example, it knows that `<a>` tags (of type `HTMLAnchorElement`) have a `href` property
 - TS however cannot infer the type of an element if it is grabbed by something other then it's tag type i.e. if you grab it by its class
-  - in this case, you must type cast that element if you wnat access to its specific type properites and methods
+  - in this case, you must type cast that element if you want access to its specific type properites and methods
 
 ---
 
@@ -333,3 +337,138 @@ const me: IsPerson = {
 
 - classes can implement interfaces
 - intefaces can be used much like types in that they can be used to enforce the structure and content of variable, lists, and classes
+
+---
+
+17. Rendering an HTML Template<a name='html_templates'></a>
+
+- make use of the `render()` function defined in a class directly
+- interacting with the DOM directly using the `document` JS interface
+
+---
+
+18. Generics <a name='generics'></a>
+
+- Generics are a feature in TS that allow us to create blocks of reusable code that can be used with different types
+
+```typescript
+const addUID = (obj: object) => {
+  let uid = Math.floor(Math.random() * 100);
+  return { ...obj, uid };
+};
+
+let docOne = addUID({ name: "yoshi", age: 40 });
+console.log(docOne);
+console.log(docOne.name); // error
+
+// but can't access any properties of the object because the function doesn't know what kind of object this is
+// and therefore, we can't know the properties of the returned object
+// must use generics
+```
+
+- we can capture the specifics of whatever type is passed in like this
+
+```typescript
+const addUID = <T>(obj: <T>) => {
+  let uid = Math.floor(Math.random() * 100);
+  return { ...obj, uid };
+};
+
+// but we're no longer enforcing that this parameter must be an objects
+```
+
+- instead, we can enforce that whatever is returned must extend the type that is passed in
+
+```typescript
+const addUID = <T extends object>(obj: <T>) => {
+  let uid = Math.floor(Math.random() * 100);
+  return { ...obj, uid };
+};
+
+```
+
+- or even more precisely
+
+```typescript
+const addUID = <T extends {name: string}>(obj: <T>) => {
+  let uid = Math.floor(Math.random() * 100);
+  return { ...obj, uid };
+};
+
+```
+
+- alternatively, generics can be implemented with interfaces
+
+```typescript
+interface Resource<T> {
+  uid: number;
+  resourceName: string;
+  data: T;
+}
+
+const docThree: Resource<object> = {
+  uid: 1,
+  resourceName: "person",
+  data: { name: "reed" },
+};
+
+const docFour: Resource<string[]> = {
+  uid: 1,
+  resourceName: "person",
+  data: ["reed", "mcdaniel"],
+};
+```
+
+---
+
+19. Enums<a name='enums'></a>
+
+- **enums** are a special data type that allow us to store a collection of constants and assiciate each one with a numeric value
+
+```typescript
+enum ResourceType {
+  BOOK,
+  AUTHOR,
+  FILM,
+  DIRECTOR,
+  PERSON,
+}
+interface Resource<T> {
+  uid: number;
+  resourceType: ResourceType;
+  data: T;
+}
+
+const docThree: Resource<object> = {
+  uid: 1,
+  resourceType: ResourceType.BOOK,
+  data: { name: "reed" },
+};
+
+console.log(docThree.resourceType); // returns 0 i.e. the index of BOOK in the enum
+```
+
+20. Tuples<a name='tuples'></a>
+
+- tuples, like in python, are immutable in that the type at a particular index cannot be changed
+
+```typescript
+// lists
+let arr = ["ryu", 25, true];
+arrr[0] = false;
+arr = [30, false, "yoshi"];
+// the above is all fine for lists
+
+//tuple
+let tup: [string, number, boolean] = ["ryu", 25, true];
+tup[0] = false; // error
+tup[0] = "yoshi"; // allowed
+```
+
+- tuples are useful for eforcing structure on a collection, for example passing in args as a tuple
+
+```typescript
+let student: [string, number];
+student = [98, "reed"]; // error
+student = ["reed", 98]; //allowed
+```
